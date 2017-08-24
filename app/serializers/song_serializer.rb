@@ -3,6 +3,11 @@ class SongSerializer < ActiveModel::Serializer
 
   has_many :artists
   has_many :featured_artists
+  has_many :credits, if: :details_enabled?
+
+  def details_enabled?
+    instance_options[:details]
+  end
 
   def url
     "/songs/#{object.slug}"
