@@ -3,10 +3,15 @@ class SongSerializer < ActiveModel::Serializer
 
   has_many :artists
   has_many :featured_artists
-  has_many :credits, if: :details_enabled?
+  has_many :credits, if: :extended?
+  belongs_to :album, if: :has_album?, if: :extended?
 
-  def details_enabled?
-    instance_options[:details]
+  def extended?
+    instance_options[:extended]
+  end
+
+  def has_album?
+    object.album
   end
 
   def url
