@@ -1,9 +1,9 @@
 class SongSerializer < ActiveModel::Serializer
   attributes :id, :url, :title, :year, :yachtski, :scores
+  attribute :players, if: :extended?
 
   has_many :artists
   has_many :featured_artists
-  has_many :credits, if: :extended?
   belongs_to :album, if: :has_album?, if: :extended?
 
   def extended?
