@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :songs, only: [:index, :show]
       resources :albums, only: [:show]
+      resources :personnel, only: [:show]
     end
   end
 
