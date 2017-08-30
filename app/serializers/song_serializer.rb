@@ -1,18 +1,8 @@
 class SongSerializer < ActiveModel::Serializer
-  attributes :id, :url, :title, :year, :yachtski, :scores
-  attribute :players, if: :extended?
+  attributes :id, :url, :title, :track_no, :year, :yachtski, :scores
 
   has_many :artists
   has_many :featured_artists
-  belongs_to :album, if: :has_album?, if: :extended?
-
-  def extended?
-    instance_options[:extended]
-  end
-
-  def has_album?
-    object.album
-  end
 
   def url
     "/songs/#{object.slug}"
