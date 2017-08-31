@@ -1,4 +1,4 @@
-class Api::V1::SongsController < ApplicationController
+class Api::V1::SongsController < Api::V1::ApiController
   def index
     @songs = Song.all.order("yachtski DESC")
     render json: @songs
