@@ -6,6 +6,8 @@ Rails.application.routes.draw do
       resources :albums, only: [:show]
       resources :personnel, only: [:show]
       resources :episodes, only: [:show]
+      post   "/login"       => "sessions#create"
+      delete "/logout"      => "sessions#destroy"
     end
   end
 
