@@ -6,11 +6,8 @@ Rails.application.routes.draw do
       resources :albums, only: [:show]
       resources :personnel, only: [:show]
       resources :episodes, only: [:show]
-
-      scope :format => true, :constraints => { :format => 'json' } do
-        post   "/login"       => "sessions#create"
-        delete "/logout"      => "sessions#destroy"
-      end
+      post   "/login"       => "sessions#create"
+      delete "/logout"      => "sessions#destroy"
     end
   end
 
