@@ -3,6 +3,7 @@ class SongSerializer < ActiveModel::Serializer
 
   has_many :artists
   has_many :featured_artists
+  belongs_to :episode
 
   def url
     "/songs/#{object.slug}"
