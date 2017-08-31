@@ -1,4 +1,4 @@
-class Api::V1::ApiController < ApplicationController
+class Api::V1::ApiController < ActionController::Base
   def require_login
     authenticate_token || render_unauthorized("Access denied")
   end
