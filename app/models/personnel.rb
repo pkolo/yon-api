@@ -19,4 +19,6 @@ class Personnel < ActiveRecord::Base
     ActiveRecord::Base.connection.execute(query)
   end
 
+  validates :name, presence: true
+
 end
