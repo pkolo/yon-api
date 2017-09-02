@@ -16,6 +16,8 @@ class Song < ActiveRecord::Base
     ActiveRecord::Base.connection.execute(query)
   end
 
+  accepts_nested_attributes_for :credits
+
   validates :title,        presence: true
   validates :year,         presence: true, numericality: { only_integer: true, greater_than: 1850, less_than_or_equal_to: Date.today.year }
   validates :jd_score,     presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
