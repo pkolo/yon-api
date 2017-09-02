@@ -1,4 +1,6 @@
 class Song < ActiveRecord::Base
+  before_save :update_yachtski
+
   belongs_to :album, optional: true
   belongs_to :episode
   has_many :credits, as: :creditable, dependent: :destroy
@@ -24,4 +26,8 @@ class Song < ActiveRecord::Base
   validates :hunter_score, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
   validates :steve_score,  presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
   validates :dave_score,   presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+
+  def update_yachtski
+    self.yachtski = (self.jd_score + self.hunter_score + self.steve_score + self.dave_score) / 4
+  end
 end
