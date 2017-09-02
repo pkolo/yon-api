@@ -23,12 +23,13 @@ class Api::V1::SongsController < Api::V1::ApiController
   end
 
   private
-    def episode_id_params
-      params.require(:episode_id)
+    def song_params
+      params.require(:song)
+            .permit(:title, :year, :jd_score, :dave_score, :hunter_score, :steve_score, :credits_attributes => [:role, :personnel_attributes => [:id, :name]])
     end
 
-    def song_params
-      params.require(:song).permit(:title, :year, :jd_score, :dave_score, :hunter_score, :steve_score, :episode_attributes => [:id])
+    def episode_id_params
+      params.require(:episode_id)
     end
 
     def find_episode
