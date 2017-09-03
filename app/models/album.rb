@@ -1,6 +1,7 @@
 class Album < ActiveRecord::Base
   has_many :songs
-  has_many :credits, as: :creditable, dependent: :destroy
+  has_many :credits, as: :creditable
+  has_many :personnel, through: :credits, dependent: :destroy
   has_many :artists, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, through: :credits, source: :personnel
   has_many :featured_artists, ->(credit) { where 'credits.role IN (?)', ["Featuring", "Duet"] }, through: :credits, source: :personnel
 
