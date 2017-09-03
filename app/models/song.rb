@@ -1,4 +1,6 @@
 class Song < ActiveRecord::Base
+  YT_API = YoutubeApi.new
+
   before_save :update_yachtski
   after_create_commit :update_yt_id
 
@@ -35,7 +37,7 @@ class Song < ActiveRecord::Base
 
   def update_yt_id
     search_params = {artist: artists.pluck(:name), title: title}
-    new_yt_id = YoutubeApi.new.get_video_id(search_params)
+    new_yt_id = YT_API.get_video_id(search_params)
     self.update_columns yt_id: new_yt_id
   end
 end
