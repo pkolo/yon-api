@@ -34,7 +34,7 @@ class Personnel < ActiveRecord::Base
   end
 
   def total_credited_media
-    songs.count + albums_performed_on.count
+    songs.size + albums_performed_on.size
   end
 
   def albums_performed_on
