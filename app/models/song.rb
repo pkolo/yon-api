@@ -1,5 +1,8 @@
 class Song < ActiveRecord::Base
-  belongs_to :album
+  before_save :update_yachtski
+  after_create_commit :update_yt_id
+
+  belongs_to :album, optional: true
   belongs_to :episode
   has_many :credits, as: :creditable, dependent: :destroy
   has_many :artists, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, through: :credits, source: :personnel
@@ -14,5 +17,24 @@ class Song < ActiveRecord::Base
       ORDER BY p.yachtski DESC
       SQL
     ActiveRecord::Base.connection.execute(query)
+  end
+
+  accepts_nested_attributes_for :credits
+
+  validates :title,        presence: true
+  validates :year,         presence: true, numericality: { only_integer: true, greater_than: 1850, less_than_or_equal_to: Date.today.year }
+  validates :jd_score,     presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :hunter_score, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :steve_score,  presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :dave_score,   presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+
+  def update_yachtski
+    self.yachtski = (jd_score + hunter_score + steve_score + dave_score) / 4
+  end
+
+  def update_yt_id
+    search_params = {artist: artists.pluck(:name), title: title}
+    new_yt_id = YoutubeApi.new.get_video_id(search_params)
+    self.update_columns yt_id: new_yt_id
   end
 end
