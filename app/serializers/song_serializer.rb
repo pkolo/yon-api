@@ -1,5 +1,5 @@
 class SongSerializer < ActiveModel::Serializer
-  attributes :id, :url, :title, :track_no, :year, :yachtski, :scores
+  attributes :id, :url, :title, :track_no, :yt_id, :year, :yachtski, :scores
 
   has_many :artists
   has_many :featured_artists
