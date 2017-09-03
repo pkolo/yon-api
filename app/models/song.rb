@@ -1,5 +1,6 @@
 class Song < ActiveRecord::Base
   before_save :update_yachtski
+  after_create_commit :update_yt_id
 
   belongs_to :album, optional: true
   belongs_to :episode
@@ -28,6 +29,12 @@ class Song < ActiveRecord::Base
   validates :dave_score,   presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
 
   def update_yachtski
-    self.yachtski = (self.jd_score + self.hunter_score + self.steve_score + self.dave_score) / 4
+    self.yachtski = (jd_score + hunter_score + steve_score + dave_score) / 4
+  end
+
+  def update_yt_id
+    search_params = {artist: artists.pluck(:name), title: title}
+    new_yt_id = YoutubeApi.new.get_video_id(search_params)
+    self.update_columns yt_id: new_yt_id
   end
 end
