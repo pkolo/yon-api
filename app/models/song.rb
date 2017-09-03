@@ -1,10 +1,13 @@
 class Song < ActiveRecord::Base
+  YT_API = YoutubeApi.new
+
   before_save :update_yachtski
   after_create_commit :update_yt_id
 
   belongs_to :album, optional: true
   belongs_to :episode
-  has_many :credits, as: :creditable, dependent: :destroy
+  has_many :credits, as: :creditable
+  has_many :personnel, through: :credits, dependent: :destroy
   has_many :artists, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, through: :credits, source: :personnel
   has_many :featured_artists, ->(credit) { where 'credits.role IN (?)', ["Featuring", "Duet"] }, through: :credits, source: :personnel
 
@@ -34,7 +37,7 @@ class Song < ActiveRecord::Base
 
   def update_yt_id
     search_params = {artist: artists.pluck(:name), title: title}
-    new_yt_id = YoutubeApi.new.get_video_id(search_params)
+    new_yt_id = YT_API.get_video_id(search_params)
     self.update_columns yt_id: new_yt_id
   end
 end
