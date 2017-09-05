@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170831181004) do
+ActiveRecord::Schema.define(version: 20170905152901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "pg_trgm"
 
   create_table "albums", id: :serial, force: :cascade do |t|
-    t.string "title", null: false
+    t.string "title"
     t.string "discog_id", null: false
     t.datetime "created_at"
     t.datetime "updated_at"

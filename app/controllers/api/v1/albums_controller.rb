@@ -1,4 +1,4 @@
-class Api::V1::AlbumsController < ApplicationController
+class Api::V1::AlbumsController < Api::V1::ApiController
   before_action :require_login, only: [:create]
   before_action :find_song, only: [:create]
 
@@ -9,7 +9,13 @@ class Api::V1::AlbumsController < ApplicationController
 
   # Nested through song
   def create
-    
+    @album = Album.find_or_initialize_by(album_params)
+    @song.album = @album
+    if @album.save
+      binding.pry
+    else
+      render json: {errors: @album.errors.full_messages}, status: :unprocessable_entity
+    end
   end
 
   private
