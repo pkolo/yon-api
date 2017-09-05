@@ -1,4 +1,6 @@
 class Album < ActiveRecord::Base
+  before_validation :get_album_data
+
   has_many :songs
   has_many :credits, as: :creditable
   has_many :personnel, through: :credits, dependent: :destroy
@@ -14,5 +16,14 @@ class Album < ActiveRecord::Base
       ORDER BY p.yachtski DESC
       SQL
     ActiveRecord::Base.connection.execute(query)
+  end
+
+  validates :discog_id, presence: true
+  validates :title, presence: true
+
+  def get_album_data
+    api = DiscogsApi.new
+    response = api.get_release(discog_id)
+    binding.pry
   end
 end
