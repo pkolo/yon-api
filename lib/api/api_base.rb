@@ -1,6 +1,12 @@
 require 'net/http'
 require 'uri'
 
+module SearchUtilities
+  def sanitize_string_for_search(string)
+    string.downcase.gsub(/[^0-9a-z ]/i, '')
+  end
+end
+
 class ApiBase
   def get(url)
     uri = URI.parse(url)
