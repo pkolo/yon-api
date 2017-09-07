@@ -34,9 +34,9 @@ class Song < ActiveRecord::Base
   end
 
   def update_yt_id
-    api = YoutubeApi.new
     search_params = {artist: artists.pluck(:name), title: title}
-    new_yt_id = api.get_video_id(search_params)
+    youtube = YoutubeApi.new(search_params)
+    new_yt_id = youtube.search
     self.update_columns yt_id: new_yt_id
   end
 end
