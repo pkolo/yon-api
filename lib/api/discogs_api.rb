@@ -1,9 +1,17 @@
-require_relative '../utilities'
-
 class DiscogsApi < ApiBase
-  RELEASE_ROOT = "https://api.discogs.com/releases/"
+  attr_accessor :type, :id
 
-  def get_release(release_id)
-    get(RELEASE_ROOT + release_id)
+  def initialize(args)
+    @type = args.fetch :type, nil
+    @id = args.fetch :id, nil
+    @options = args.fetch :options, nil
+  end
+
+  def url
+    "https://api.discogs.com/#{@type}s/#{@id}"
+  end
+
+  def get_data
+    get url
   end
 end
