@@ -14,7 +14,12 @@ class Credit < ActiveRecord::Base
 
     def find_or_initialize_personnel
       # Find or initialize the personnel by name
-      self.personnel = Personnel.find_or_initialize_by(name: self.personnel.name)
+      personnel = Personnel.find_by(name: self.personnel.name)
+      if personnel
+        self.personnel = personnel
+      else
+        self.personnel = Personnel.new(name: self.personnel.name, discog_id: self.personnel.discog_id)
+      end
     end
 
     def personnel_is_orphan?
