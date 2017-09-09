@@ -28,6 +28,7 @@ gem 'rack-cors'
 
 gem 'active_model_serializers'
 gem 'bcrypt'
+gem 'fuzzy-string-match'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
