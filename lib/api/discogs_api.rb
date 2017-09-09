@@ -1,4 +1,4 @@
-class DiscogsApi < ApiBase
+class Api::DiscogsApi < Api::ApiBase
   attr_accessor :type, :id
 
   def initialize(args)
