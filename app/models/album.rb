@@ -1,8 +1,8 @@
 class Album < ActiveRecord::Base
-  before_validation :get_album_data
 
   has_many :songs
   has_many :credits, as: :creditable
+  has_many :artist_credits, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, class_name: 'Credit', as: :creditable
   has_many :personnel, through: :credits, dependent: :destroy
   has_many :artists, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, through: :credits, source: :personnel
   has_many :featured_artists, ->(credit) { where 'credits.role IN (?)', ["Featuring", "Duet"] }, through: :credits, source: :personnel
@@ -18,12 +18,10 @@ class Album < ActiveRecord::Base
     ActiveRecord::Base.connection.execute(query)
   end
 
+  accepts_nested_attributes_for :credits
+  accepts_nested_attributes_for :artist_credits
+  accepts_nested_attributes_for :songs
+
   validates :discog_id, presence: true
   validates :title, presence: true
-
-  def get_album_data
-    api = DiscogsApi.new
-    response = api.get_release(discog_id)
-    binding.pry
-  end
 end
