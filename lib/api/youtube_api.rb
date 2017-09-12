@@ -1,17 +1,18 @@
-require_relative '../utilities'
-
 class YoutubeApi < ApiBase
   include SearchUtilities
 
-  ROOT = "https://www.googleapis.com/youtube/v3/search?"
+  def initialize(search_args)
+    @root = "https://www.googleapis.com/youtube/v3/search?"
+    @q = q_from(search_args)
+  end
 
-  def get_video_id(song_params)
+  def search
     search_params = {part: "snippet",
                      type: "video",
                      videoEmbeddable: true,
-                     q: q_from(song_params),
+                     q: @q,
                      key: ENV['YT_KEY']}
-    data = get(ROOT + parameterize(search_params))
+    data = get(@root + parameterize(search_params))
     vid_data = data["items"].first
     vid_data["id"]["videoId"]
   end

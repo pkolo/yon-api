@@ -1,7 +1,9 @@
 require 'net/http'
 require 'uri'
 
-class ApiBase
+class Api::ApiBase
+  include StringUtilities
+
   def get(url)
     uri = URI.parse(url)
     response = Net::HTTP.get_response(uri)
