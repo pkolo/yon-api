@@ -5,6 +5,7 @@ class Song < ActiveRecord::Base
   belongs_to :album, optional: true
   belongs_to :episode
   has_many :credits, as: :creditable
+  has_many :artist_credits, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, class_name: 'Credit', as: :creditable
   has_many :personnel, through: :credits, dependent: :destroy
   has_many :artists, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, through: :credits, source: :personnel
   has_many :featured_artists, ->(credit) { where 'credits.role IN (?)', ["Featuring", "Duet"] }, through: :credits, source: :personnel
@@ -21,6 +22,7 @@ class Song < ActiveRecord::Base
   end
 
   accepts_nested_attributes_for :credits
+  accepts_nested_attributes_for :artist_credits
 
   validates :title,        presence: true
   validates :year,         presence: true, numericality: { only_integer: true, greater_than: 1850, less_than_or_equal_to: Date.today.year }
@@ -35,7 +37,7 @@ class Song < ActiveRecord::Base
 
   def update_yt_id
     search_params = {artist: artists.pluck(:name), title: title}
-    youtube = YoutubeApi.new(search_params)
+    youtube = Api::YoutubeApi.new(search_params)
     new_yt_id = youtube.search
     self.update_columns yt_id: new_yt_id
   end
