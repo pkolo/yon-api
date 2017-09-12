@@ -1,22 +1,44 @@
 class DiscogsAdapter
+  attr_accessor :song_payload
+
   include StringUtilities
   include TrackMatchUtilities
 
-  def generate_album_params_from(payload, song)
-    song_data = get_song_data_from(payload["tracklist"], song)
+  def initialize(payload, song)
+    @payload = payload
+    @song = song
+  end
+
+  def generate_album_params
+    full_album_credits = isolate_album_credits
+    @song_payload = get_song_data
+    artist_credits = generate_artist_credits_from(@payload["artists"])
+    song_credits = @song_payload["extraartists"]
+    extra_song_credits = isolate_song_credits
     {
-      "discog_id": payload["id"],
-      # "title": payload["title"],
-      "year": payload["year"],
-      "artist_credits_attributes": generate_artist_credits_from(payload["artists"]),
-      "credits_attributes": generate_album_credits_from(payload["extraartists"]),
-      "songs_attributes": {
-        "id": song.id,
-        "title": song_data.title,
-        "artists_attributes": generate_artist_credits_from(payload["artists"]),
-        "credits_attributes": generate_song_credits_from(song_data["extraartists"]),
-      }
+      "discog_id": @payload["id"],
+      "title": @payload["title"],
+      "year": @payload["year"],
+      "artist_credits_attributes": artist_credits,
+      "credits_attributes": generate_credits_from(full_album_credits),
+      "song_ids": [@song.id],
+      "songs_attributes": [{
+        "id": @song.id,
+        "title": @song_payload["title"],
+        "track_no": @song_payload["position"],
+        "artist_credits_attributes": artist_credits,
+        "credits_attributes": generate_credits_from(song_credits + extra_song_credits),
+      }]
     }
+  end
+
+  def isolate_album_credits
+    @payload["extraartists"].select { |credit| credit["tracks"].empty? }
+  end
+
+  def isolate_song_credits
+    track_range = @payload["tracklist"].map {|track| track["position"]}
+    @payload["extraartists"].select { |credit| in_track_range?(track_range, credit, @song_payload["position"]) }
   end
 
   def generate_artist_credits_from(credit_list)
@@ -31,29 +53,23 @@ class DiscogsAdapter
     end
   end
 
-  def generate_album_credits_from(credit_list)
+  def generate_credits_from(credit_list)
     credit_list.each_with_object([]) do |credit, memo|
-      if credit["tracks"].empty?
-        credit["role"].split(', ').each do |role|
-          memo << {
-            "role": role,
-            "personnel_attributes": {
-              "name": remove_parens(credit["name"]),
-              "discog_id": credit["id"]
-            }
+      credit["role"].split(', ').each do |role|
+        memo << {
+          "role": role,
+          "personnel_attributes": {
+            "name": remove_parens(credit["name"]),
+            "discog_id": credit["id"]
           }
-        end
+        }
       end
     end
   end
 
-  def generate_song_credits_from(credit_list)
-
-  end
-
-  def get_song_data_from(tracklist, song)
-    tracklist.find do |track|
-      track if is_match?(track["title"], song.title)
+  def get_song_data
+    @payload["tracklist"].find do |track|
+      track if is_match?(remove_parens(track["title"]).downcase, remove_parens(@song.title).downcase)
     end
   end
 
