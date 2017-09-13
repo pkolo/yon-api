@@ -4,9 +4,10 @@ class DiscogsAdapter
   include StringUtilities
   include TrackMatchUtilities
 
-  def initialize(payload, song)
+  def initialize(payload, song, album)
     @payload = payload
     @song = song
+    @album = album
   end
 
   def generate_album_params
@@ -21,7 +22,7 @@ class DiscogsAdapter
       "year": @payload["year"],
       "artist_credits_attributes": artist_credits,
       "credits_attributes": generate_credits_from(full_album_credits),
-      "song_ids": [@song.id],
+      "song_ids": @album.songs.pluck(:id) + [@song.id],
       "songs_attributes": [{
         "id": @song.id,
         "title": @song_payload["title"],
