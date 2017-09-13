@@ -41,4 +41,8 @@ class Personnel < ActiveRecord::Base
     albums.where.not(id: albums_from_songs.pluck(:id))
   end
 
+  def has_discog?
+    !!discog_id
+  end
+
 end
