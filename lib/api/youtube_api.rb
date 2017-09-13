@@ -1,5 +1,5 @@
-class YoutubeApi < ApiBase
-  include SearchUtilities
+class Api::YoutubeApi < Api::ApiBase
+  include StringUtilities
 
   def initialize(search_args)
     @root = "https://www.googleapis.com/youtube/v3/search?"
