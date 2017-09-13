@@ -14,7 +14,7 @@ class DiscogsAdapter
     full_album_credits = isolate_album_credits
     @song_payload = get_song_data
     artist_credits = generate_artist_credits_from(@payload["artists"])
-    song_credits = @song_payload["extraartists"]
+    song_credits = @song_payload["extraartists"] || []
     extra_song_credits = isolate_song_credits
     {
       "discog_id": @payload["id"],
@@ -48,7 +48,7 @@ class DiscogsAdapter
         "role": "Artist",
         "personnel_attributes": {
           "name": remove_parens(credit["name"]),
-          "discog_id": credit["id"]
+          "discog_id": credit["id"].to_s
         }
       }
     end
