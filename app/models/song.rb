@@ -1,6 +1,7 @@
 class Song < ActiveRecord::Base
   before_save :update_yachtski
   after_create_commit :update_yt_id
+  after_destroy :destroy_album, if: :album_is_orphan?
 
   belongs_to :album, optional: true
   belongs_to :episode
@@ -40,5 +41,13 @@ class Song < ActiveRecord::Base
     youtube = Api::YoutubeApi.new(search_params)
     new_yt_id = youtube.search
     self.update_columns yt_id: new_yt_id
+  end
+
+  def album_is_orphan?
+    self.album && self.album.songs.empty?
+  end
+
+  def destroy_album
+    self.album.destroy
   end
 end
