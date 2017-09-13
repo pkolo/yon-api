@@ -3,7 +3,7 @@ class Song < ActiveRecord::Base
   after_create_commit :update_yt_id
   after_destroy :destroy_album, if: :album_is_orphan?
 
-  belongs_to :album, optional: true
+  belongs_to :album, optional: true, touch: true
   belongs_to :episode
   has_many :credits, as: :creditable
   has_many :artist_credits, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, class_name: 'Credit', as: :creditable
