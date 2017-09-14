@@ -1,5 +1,6 @@
 class Album < ActiveRecord::Base
   after_touch :update_yachtski
+  after_update :destroy_duplicate_credits
 
   has_many :songs
   has_many :credits, as: :creditable
@@ -32,5 +33,9 @@ class Album < ActiveRecord::Base
 
   def calculate_yachtski
     songs.average(:yachtski).to_f
+  end
+
+  def destroy_duplicate_credits
+    credits.where.not(id: credits.group(:personnel_id, :role).pluck('min(id)')).destroy_all
   end
 end
