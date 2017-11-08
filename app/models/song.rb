@@ -1,14 +1,15 @@
 class Song < ActiveRecord::Base
   before_save :update_yachtski
+  after_save :destroy_temp_credits
   after_create_commit :update_yt_id
   after_destroy :destroy_album, if: :album_is_orphan?
 
-  belongs_to :album, optional: true
+  belongs_to :album, optional: true, touch: true
   belongs_to :episode
   has_many :credits, as: :creditable
-  has_many :artist_credits, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, class_name: 'Credit', as: :creditable
+  has_many :artist_credits, ->(credit) { where 'credits.role IN (?)', ["Artist", "Temp Artist"] }, class_name: 'Credit', as: :creditable
   has_many :personnel, through: :credits, dependent: :destroy
-  has_many :artists, ->(credit) { where 'credits.role IN (?)', ["Artist"] }, through: :credits, source: :personnel
+  has_many :artists, ->(credit) { where 'credits.role IN (?)', ["Artist", "Temp Artist"] }, through: :credits, source: :personnel
   has_many :featured_artists, ->(credit) { where 'credits.role IN (?)', ["Featuring", "Duet"] }, through: :credits, source: :personnel
 
   def players
@@ -41,6 +42,10 @@ class Song < ActiveRecord::Base
     youtube = Api::YoutubeApi.new(search_params)
     new_yt_id = youtube.search
     self.update_columns yt_id: new_yt_id
+  end
+
+  def destroy_temp_credits
+    self.credits.where(role: "Temp Artist").destroy_all if self.album
   end
 
   def album_is_orphan?
