@@ -3,8 +3,7 @@ class Api::V1::SongsController < Api::V1::ApiController
   before_action :find_episode, only: [:create]
 
   def index
-    @songs = Song.all.order("yachtski DESC")
-    render json: @songs
+    render json: fetch_songs
   end
 
   def show
@@ -34,5 +33,17 @@ class Api::V1::SongsController < Api::V1::ApiController
 
     def find_episode
       @episode = Episode.find(episode_id_params)
+    end
+
+    def fetch_songs
+      songs_cache = $redis.get("songs")
+      if songs_cache.nil?
+        songs = Song.includes(:personnel).all
+        songs_resource = ActiveModelSerializers::SerializableResource.new(songs, each_serializer: SongSerializer)
+        songs_object = songs_resource.to_json
+        $redis.set("songs", songs_object)
+        $redis.expire("songs", 10.day.to_i)
+      end
+      songs_cache
     end
 end
