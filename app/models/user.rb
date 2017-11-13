@@ -7,9 +7,9 @@ class User < ApplicationRecord
     self.update_columns(token: nil)
   end
 
-  def self.valid_login?(name, password)
-    user = find_by(name: name)
-    if user && user.authenticate(password)
+  def self.valid_login?(params)
+    user = find_by(name: params["name"])
+    if user && user.authenticate(params["password"])
       user
     end
   end
