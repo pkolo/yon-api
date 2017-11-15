@@ -4,9 +4,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :albums, only: [:show]
       resources :personnel, only: [:show]
-      
+
       resources :songs, only: [:index, :show] do
         resources :albums, only: [:create]
+        post '/albums/search' => 'albums#search'
       end
 
       resources :episodes, only: [:show, :create] do
