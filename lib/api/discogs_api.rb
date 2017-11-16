@@ -19,8 +19,9 @@ class Api::DiscogsApi < Api::ApiBase
 
   def search
     artist = sanitize_string_for_search(@options[:artist])
-    q = "type=release&artist=#{artist}&track=#{@options[:title]}&token=#{ENV.fetch("DISCOG_TOKEN")}"
+    title = sanitize_string_for_search(@options[:title])
+    q = "type=release&artist=#{artist}&track=#{title}&token=#{ENV.fetch("DISCOG_TOKEN")}"
     response = get "https://api.discogs.com/database/search?#{q}"
-    response["results"].map {|r| r["id"].to_s}
+    response["results"].sort_by {|r| r["community"]["have"]}.reverse
   end
 end

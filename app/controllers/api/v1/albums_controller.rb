@@ -24,7 +24,8 @@ class Api::V1::AlbumsController < Api::V1::ApiController
   def search
     options = {options: {artist: @song.artists.first[:name], title: @song.title}}
     discogs = Api::DiscogsApi.new(options)
-    album_ids = discogs.search
+    search_data = discogs.search
+    album_ids = search_data.map {|r| r["id"].to_s}
     match = album_ids & Album.pluck(:discog_id)
 
     if match.any?
@@ -38,7 +39,8 @@ class Api::V1::AlbumsController < Api::V1::ApiController
         render json: {errors: errors}, status: :unprocessable_entity
       end
     else
-      render json: {errors: ["No matching albums. Some suggestions: #{album_ids.join(', ')}"]}, status: :unprocessable_entity
+      suggestions = search_data.map {|r| {title: r["title"], year: r["year"], id: r["id"], url: "http://discogs.com/#{r["uri"]}"}}
+      render json: {errors: ["No matching albums."], suggestions: suggestions}, status: :unprocessable_entity
     end
   end
 
