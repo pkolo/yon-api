@@ -55,4 +55,12 @@ class Song < ActiveRecord::Base
   def destroy_album
     self.album.destroy
   end
+
+  def self.refresh_cache
+    songs = self.includes(:personnel).all
+    songs_resource = ActiveModelSerializers::SerializableResource.new(songs, each_serializer: SongSerializer)
+    songs_object = songs_resource.to_json
+    $redis.set("songs", songs_object)
+    $redis.expire("songs", 10.day.to_i)
+  end
 end
