@@ -14,7 +14,7 @@ class Api::V1::AlbumsController < Api::V1::ApiController
     params = get_album_data
 
     if @album.update(params)
-      render json: @song, status: :created
+      render json: @song, serializer: ExtendedSongSerializer, status: :created
     else
       errors = @album.errors.full_messages
       render json: {errors: errors}, status: :unprocessable_entity
@@ -33,7 +33,7 @@ class Api::V1::AlbumsController < Api::V1::ApiController
       params = get_album_data
 
       if @album.update(params)
-        render json: @song, status: :created
+        render json: @song, serializer: ExtendedSongSerializer, status: :created
       else
         errors = @album.errors.full_messages
         render json: {errors: errors}, status: :unprocessable_entity
