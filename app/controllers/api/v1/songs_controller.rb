@@ -35,12 +35,4 @@ class Api::V1::SongsController < Api::V1::ApiController
     def find_episode
       @episode = Episode.find(episode_id_params)
     end
-
-    def fetch_songs
-      songs_cache = $redis.get("songs")
-      if songs_cache.nil?
-        Song.refresh_cache
-      end
-      songs_cache
-    end
 end
