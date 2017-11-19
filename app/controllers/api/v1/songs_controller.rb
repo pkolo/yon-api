@@ -3,7 +3,8 @@ class Api::V1::SongsController < Api::V1::ApiController
   before_action :find_episode, only: [:create]
 
   def index
-    render json: fetch_songs
+    @songs = Song.all.map {|song| song.data['data']}
+    render json: @songs, adapter: false
   end
 
   def show

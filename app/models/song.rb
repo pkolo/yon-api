@@ -45,8 +45,7 @@ class Song < ActiveRecord::Base
   end
 
   def update_data
-    song_data = ActiveModelSerializers::SerializableResource.new(self, serializer: SongSerializer)
-    self.update_columns data: song_data.to_json
+    self.update_columns data: self.as_json
   end
 
   def destroy_temp_credits
