@@ -44,6 +44,11 @@ class Song < ActiveRecord::Base
     self.update_columns yt_id: new_yt_id
   end
 
+  def update_data
+    song_data = ActiveModelSerializers::SerializableResource.new(self, serializer: SongSerializer)
+    self.update_columns data: song_data.to_json
+  end
+
   def destroy_temp_credits
     self.credits.where(role: "Temp Artist").destroy_all if self.album
   end
