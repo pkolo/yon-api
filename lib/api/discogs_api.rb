@@ -1,4 +1,6 @@
 class Api::DiscogsApi < Api::ApiBase
+  include StringUtilities
+
   attr_accessor :type, :id
 
   def initialize(args)
@@ -13,5 +15,13 @@ class Api::DiscogsApi < Api::ApiBase
 
   def get_data
     get url
+  end
+
+  def search
+    artist = sanitize_string_for_search(@options[:artist])
+    title = sanitize_string_for_search(@options[:title])
+    q = "type=release&artist=#{artist}&track=#{title}&token=#{ENV.fetch("DISCOG_TOKEN")}"
+    response = get "https://api.discogs.com/database/search?#{q}"
+    response["results"].sort_by {|r| r["community"]["have"]}.reverse
   end
 end

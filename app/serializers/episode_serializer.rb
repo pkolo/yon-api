@@ -1,9 +1,5 @@
 class EpisodeSerializer < ActiveModel::Serializer
-  attributes :number, :link, :url, :title
-
-  def url
-    "/episodes/#{object.id}"
-  end
+  attributes :id, :number, :link, :title
 
   def title
     if object.number.match('YON')

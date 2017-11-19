@@ -1,11 +1,11 @@
 class AlbumSerializer < ActiveModel::Serializer
-  attributes :id, :url, :title, :year
+  attributes :id, :url, :title, :year, :yachtski
 
   has_many :players
   has_many :artists
 
   def url
-    "/album/#{object.slug}"
+    "/albums/#{object.slug}"
   end
 
 end

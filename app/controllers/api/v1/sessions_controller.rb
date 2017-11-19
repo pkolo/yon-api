@@ -2,7 +2,7 @@ class Api::V1::SessionsController < Api::V1::ApiController
   skip_before_action :require_login, only: [:create], raise: false
 
   def create
-    if user = User.valid_login?(params[:name], params[:password])
+    if user = User.valid_login?(session_params)
       allow_token_to_be_used_only_once_for(user)
       send_auth_token_for_valid_login_of(user)
     else
@@ -16,6 +16,10 @@ class Api::V1::SessionsController < Api::V1::ApiController
   end
 
   private
+
+  def session_params
+    params.require(:session).permit(:name, :password)
+  end
 
   def send_auth_token_for_valid_login_of(user)
     render json: { token: user.token }
