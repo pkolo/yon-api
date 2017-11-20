@@ -1,8 +1,8 @@
 class PersonnelSerializer < ActiveModel::Serializer
-  attributes :id, :url, :name, :yachtski
+  attributes :id, :resource_url, :name, :yachtski
 
-  def url
-    "/personnel/#{object.slug}"
+  def resource_url
+    "/personnel/#{object.id}"
   end
 
 end

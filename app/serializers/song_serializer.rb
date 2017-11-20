@@ -1,12 +1,12 @@
 class SongSerializer < ActiveModel::Serializer
-  attributes :id, :url, :title, :track_no, :yt_id, :year, :yachtski, :scores
+  attributes :id, :resource_url, :title, :track_no, :yt_id, :year, :yachtski, :scores
 
   has_many :artists
   has_many :featured_artists
   belongs_to :episode
 
-  def url
-    "/songs/#{object.slug}"
+  def resource_url
+    "/songs/#{object.id}"
   end
 
   def scores
