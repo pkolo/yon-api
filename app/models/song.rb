@@ -1,6 +1,7 @@
 class Song < ActiveRecord::Base
   before_save :update_yachtski
   after_save :destroy_temp_credits
+  after_save :update_data
   after_create_commit :update_yt_id
   after_destroy :destroy_album, if: :album_is_orphan?
 
@@ -42,6 +43,10 @@ class Song < ActiveRecord::Base
     youtube = Api::YoutubeApi.new(search_params)
     new_yt_id = youtube.search
     self.update_columns yt_id: new_yt_id
+  end
+
+  def update_data
+    self.update_columns data: self.as_json
   end
 
   def destroy_temp_credits
