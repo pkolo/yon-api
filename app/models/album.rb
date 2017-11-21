@@ -11,7 +11,7 @@ class Album < ActiveRecord::Base
 
   def players
     query = <<-SQL
-      SELECT p.id, p.name, p.yachtski, concat('/personnel/', p.slug) AS url, string_agg(c.role, ', ') AS roles
+      SELECT p.id, p.name, p.yachtski, concat('/personnel/', p.id) AS resource_url, string_agg(c.role, ', ') AS roles
       FROM personnels p JOIN credits c ON p.id=c.personnel_id
       WHERE c.creditable_id=#{self.id} AND c.creditable_type='#{self.class}' AND c.role NOT IN ('Artist', 'Duet', 'Featuring')
       GROUP BY p.id
