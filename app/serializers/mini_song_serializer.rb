@@ -5,6 +5,6 @@ class MiniSongSerializer < ActiveModel::Serializer
   has_many :featured_artists
 
   def resource_url
-    "/albums/#{object.id}"
+    "/songs/#{object.id}"
   end
 end
