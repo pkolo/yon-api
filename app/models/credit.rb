@@ -21,7 +21,7 @@ class Credit < ActiveRecord::Base
         existing_personnel.update(discog_id: self.personnel.discog_id)
         self.personnel = existing_personnel
       else
-        self.personnel = Personnel.new(name: self.personnel.name, discog_id: self.personnel.discog_id)
+        self.personnel = Personnel.create(name: self.personnel.name, discog_id: self.personnel.discog_id)
       end
     end
 
