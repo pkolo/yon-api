@@ -7,6 +7,11 @@ module TrackMatchUtilities
     match >= strength
   end
 
+  def match_distance(str1, str2)
+    fuzzy = FuzzyStringMatch::JaroWinkler.create( :pure )
+    fuzzy.getDistance(str1, str2)
+  end
+
   def in_track_range?(all_tracks, person, track_no)
     extract_range = person["tracks"].split(", ").map do |track|
       if track.include?("to")

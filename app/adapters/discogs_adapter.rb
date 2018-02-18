@@ -69,9 +69,18 @@ class DiscogsAdapter
   end
 
   def get_song_data
-    @payload["tracklist"].find do |track|
-      track if is_match?(remove_parens(track["title"]).downcase, remove_parens(@song.title).downcase)
+    match = {}
+    strength = 85.0
+    @payload["tracklist"].each do |track|
+      match_strength = match_distance(remove_parens(track["title"]).downcase, remove_parens(@song.title).downcase)
+
+      if match_strength > strength
+        strength = match_strength
+        match = track
+      end
+
     end
+    match
   end
 
 end
