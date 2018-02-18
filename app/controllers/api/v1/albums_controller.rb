@@ -33,6 +33,7 @@ class Api::V1::AlbumsController < Api::V1::ApiController
       params = get_album_data
 
       if @album.update(params)
+        @song.update_data
         render json: @song, serializer: ExtendedSongSerializer, status: :created
       else
         errors = @album.errors.full_messages
