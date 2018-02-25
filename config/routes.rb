@@ -14,6 +14,8 @@ Rails.application.routes.draw do
         resources :songs, only: [:create]
       end
 
+      resources :stats, only: [:show]
+
       post   "/login"       => "sessions#create"
       delete "/logout"      => "sessions#destroy"
     end
