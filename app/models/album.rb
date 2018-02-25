@@ -1,4 +1,6 @@
 class Album < ActiveRecord::Base
+  scope :yacht_rock, -> { where('yachtski >= 50') }
+
   after_touch :update_yachtski
   after_update :destroy_duplicate_credits
 

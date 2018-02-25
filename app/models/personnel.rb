@@ -34,11 +34,24 @@ class Personnel < ActiveRecord::Base
   end
 
   def total_credited_media
-    songs.size + albums_performed_on.size
+    songs.size + albums_performed_on.size || 0.0
+  end
+
+  def total_yacht_media
+    songs.merge(Song.yacht_rock).size + albums_performed_on.merge(Album.yacht_rock).size || 0.0
+  end
+
+  def yacht_ratio
+    total_credited_media > 0 ? (total_yacht_media.to_f / total_credited_media.to_f) : 0.0
+  end
   end
 
   def albums_performed_on
     albums.where.not(id: albums_from_songs.pluck(:id))
+  end
+
+  def frequent_roles
+    credits.group(:role).order('count_all desc').count.first(3)
   end
 
   def has_discog?

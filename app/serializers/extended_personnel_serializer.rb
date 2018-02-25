@@ -1,6 +1,6 @@
 class ExtendedPersonnelSerializer < PersonnelSerializer
 
-  attributes :song_credits, :album_credits
+  attributes :song_credits, :album_credits, :frequent_roles
   has_many :songs_as_artist
 
   def song_credits
@@ -23,5 +23,4 @@ class ExtendedPersonnelSerializer < PersonnelSerializer
       }
     end
   end
-
 end

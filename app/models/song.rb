@@ -1,4 +1,6 @@
 class Song < ActiveRecord::Base
+  scope :yacht_rock, -> { where('yachtski >= 50') }
+
   before_save :update_yachtski
   after_save :destroy_temp_credits
   after_save :update_data
