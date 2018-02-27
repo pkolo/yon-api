@@ -44,7 +44,6 @@ class Personnel < ActiveRecord::Base
   def yacht_ratio
     total_credited_media > 0 ? (total_yacht_media.to_f / total_credited_media.to_f) : 0.0
   end
-  end
 
   def albums_performed_on
     albums.where.not(id: albums_from_songs.pluck(:id))
