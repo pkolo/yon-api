@@ -1,20 +1,20 @@
 class HostStatSerializer < ActiveModel::Serializer
-  attributes :weird_essentials, :essential, :yacht_rock, :nyacht_rock, :deviation_from_mean, :dissents
+  attributes :weird_essentials, :essential, :yacht_rock, :nyacht_rock, :deviation_from_mean, :dissents, :disagreements
 
   def weird_essentials
     object.weird_essentials.pluck(:data)
   end
 
   def essential
-    object.essential.pluck(:data)
+    object.essential
   end
 
   def yacht_rock
-    object.yacht_rock.pluck(:data)
+    object.yacht_rock
   end
 
   def nyacht_rock
-    object.nyacht_rock.pluck(:data)
+    object.nyacht_rock
   end
 
   def deviation_from_mean
@@ -36,5 +36,9 @@ class HostStatSerializer < ActiveModel::Serializer
     end
 
     { yacht: yacht_dissents, nyacht: nyacht_dissents }
+  end
+
+  def disagreements
+    object.disagreements
   end
 end

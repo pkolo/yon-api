@@ -10,19 +10,19 @@ class Stat
   end
 
   def essential
-    @host ? Song.where("#{@host.name}_score >= 90") : Song.essential
+    @host ? Song.where("#{@host.name}_score >= 90").size : Song.essential.size
   end
 
   def yacht_rock
-    @host ? Song.where("#{@host.name}_score >= 50 AND #{@host.name}_score < 90") : Song.not_essential.yacht_rock
+    @host ? Song.where("#{@host.name}_score >= 50 AND #{@host.name}_score < 90").size : Song.not_essential.yacht_rock.size
   end
 
   def nyacht_rock
-    @host ? Song.where("#{@host.name}_score < 50") : Song.nyacht_rock
+    @host ? Song.where("#{@host.name}_score < 50").size : Song.nyacht_rock.size
   end
 
   def weird_essentials
-    Song.not_essential.where("#{@host.name}_score >= 90")
+    Song.not_essential.where("#{@host.name}_score >= 90").order("#{@host.name}_score desc")
   end
 
   def deviation_from_mean
@@ -39,7 +39,7 @@ class Stat
   end
 
   def disagreements
-    @host.other_hosts.each_with_object({}) do |other_host, memo|
+    all_disagreements = @host.other_hosts.inject([]) do |memo, other_host|
       max_yacht_disagreement = Song.maximum("#{@host.name}_score - #{other_host}_score")
       yacht_song = Song.where("#{@host.name}_score - #{other_host}_score = ?", max_yacht_disagreement).first.data
       yacht_song[:disagreement] = max_yacht_disagreement
@@ -48,10 +48,12 @@ class Stat
       nyacht_song = Song.where("#{other_host}_score - #{@host.name}_score = ?", max_nyacht_disagreement).first.data
       nyacht_song["disagreement"] = max_nyacht_disagreement
 
-      memo[other_host] = {
+      memo << {
+        other_host: other_host,
         yacht: yacht_song,
-        nyacht_song: nyacht_song
+        nyacht: nyacht_song
       }
     end
+    all_disagreements
   end
 end

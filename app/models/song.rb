@@ -67,6 +67,10 @@ class Song < ActiveRecord::Base
     self.album.destroy
   end
 
+  def destroy_duplicate_credits
+    credits.where.not(id: credits.group(:personnel_id, :role).pluck('min(id)')).destroy_all
+  end
+
   def self.refresh_cache
     songs = self.includes(:personnel).all
     songs_resource = ActiveModelSerializers::SerializableResource.new(songs, each_serializer: SongSerializer)
