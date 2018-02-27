@@ -50,7 +50,7 @@ class Personnel < ActiveRecord::Base
   end
 
   def frequent_roles
-    credits.group(:role).order('count_all desc').count.first(3)
+    credits.group(:role).order('count_all desc').count.first(3).map { |role| Credit.role_map(role[0]) }
   end
 
   def has_discog?

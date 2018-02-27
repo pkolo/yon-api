@@ -10,6 +10,39 @@ class Credit < ActiveRecord::Base
   validates :role, presence: true
   validates :personnel, presence: true
 
+  def self.role_map(role)
+    if role.index(/guitar/i)
+      "Guitar"
+    elsif role.index(/writ/i)
+      "Writing"
+    elsif role.index(/produc/i)
+      "Producing"
+    elsif role.index(/arrange/i)
+      "Arranging"
+    elsif role.index(/piano/i)
+      "Piano"
+    elsif role.index(/programm/i)
+      "Synth Programming"
+    elsif role.index(/synth/i)
+      "Synthesizer"
+    elsif role == "Artist"
+      "Performing Artist"
+    elsif role.index(/conduct/i)
+      "Conducting"
+    elsif role.index(/recorded/i)
+      "Engineering"
+    elsif role.index(/photog/i)
+      "Photography"
+    elsif role.index(/keyboard/i)
+      "Keyboards"
+    elsif role.index(/manage/i)
+      "Management"
+    else
+      role
+    end
+
+  end
+
   private
 
     def find_or_initialize_personnel
