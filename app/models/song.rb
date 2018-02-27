@@ -1,4 +1,9 @@
 class Song < ActiveRecord::Base
+  scope :yacht_rock, -> { where('yachtski >= 50') }
+  scope :essential, -> { where('yachtski >= 90') }
+  scope :not_essential, -> { where('yachtski < 90') }
+  scope :nyacht_rock, -> { where('yachtski < 50') }
+
   before_save :update_yachtski
   after_save :destroy_temp_credits
   after_save :update_data
@@ -60,6 +65,10 @@ class Song < ActiveRecord::Base
 
   def destroy_album
     self.album.destroy
+  end
+
+  def destroy_duplicate_credits
+    credits.where.not(id: credits.group(:personnel_id, :role).pluck('min(id)')).destroy_all
   end
 
   def self.refresh_cache
