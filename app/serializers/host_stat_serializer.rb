@@ -33,7 +33,7 @@ class HostStatSerializer < ActiveModel::Serializer
       song.data
     end
 
-    nyacht_dissents = all_dissents.last(3).map do |result|
+    nyacht_dissents = all_dissents.last(3).reverse.map do |result|
       song = Song.find(result["id"])
       song.data[:dissent] = result["dissent"]
       song.data
