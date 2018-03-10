@@ -11,7 +11,7 @@ class Song < ActiveRecord::Base
   after_destroy :destroy_album, if: :album_is_orphan?
 
   belongs_to :album, optional: true, touch: true
-  belongs_to :episode
+  has_and_belongs_to_many :episodes
   has_many :credits, as: :creditable
   has_many :artist_credits, ->(credit) { where 'credits.role IN (?)', ["Artist", "Temp Artist"] }, class_name: 'Credit', as: :creditable
   has_many :personnel, through: :credits, dependent: :destroy
