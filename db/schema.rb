@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171119152815) do
+ActiveRecord::Schema.define(version: 20180311121644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,7 +41,17 @@ ActiveRecord::Schema.define(version: 20171119152815) do
   create_table "episodes", id: :serial, force: :cascade do |t|
     t.string "number"
     t.text "notes"
-    t.string "link"
+    t.string "data_id"
+    t.bigint "show_id"
+    t.integer "episode_no"
+    t.date "air_date"
+    t.string "title"
+    t.index ["show_id"], name: "index_episodes_on_show_id"
+  end
+
+  create_table "episodes_songs", id: false, force: :cascade do |t|
+    t.bigint "song_id", null: false
+    t.bigint "episode_id", null: false
   end
 
   create_table "personnels", id: :serial, force: :cascade do |t|
@@ -54,6 +64,13 @@ ActiveRecord::Schema.define(version: 20171119152815) do
     t.index ["name"], name: "index_personnels_on_name"
   end
 
+  create_table "shows", force: :cascade do |t|
+    t.string "title"
+    t.string "abbreviation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "songs", id: :serial, force: :cascade do |t|
     t.string "title", null: false
     t.integer "year", null: false
@@ -61,7 +78,6 @@ ActiveRecord::Schema.define(version: 20171119152815) do
     t.float "jd_score", null: false
     t.float "hunter_score", null: false
     t.float "steve_score", null: false
-    t.integer "episode_id"
     t.integer "album_id"
     t.string "track_no"
     t.string "yt_id"
@@ -70,7 +86,6 @@ ActiveRecord::Schema.define(version: 20171119152815) do
     t.float "yachtski"
     t.jsonb "data"
     t.index ["album_id"], name: "index_songs_on_album_id"
-    t.index ["episode_id"], name: "index_songs_on_episode_id"
     t.index ["title"], name: "index_songs_on_title"
   end
 
@@ -82,4 +97,5 @@ ActiveRecord::Schema.define(version: 20171119152815) do
     t.string "token"
   end
 
+  add_foreign_key "episodes", "shows"
 end

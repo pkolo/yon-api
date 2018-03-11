@@ -1,17 +1,15 @@
 class EpisodeSerializer < ActiveModel::Serializer
-  attributes :id, :number, :link, :title, :resource_url
+  attributes :id, :number, :show_title, :resource_url, :air_date, :data_id
 
   def resource_url
     "/episodes/#{object.id}"
   end
 
-  def title
-    if object.number.match('YON')
-      object.number.gsub('YON', 'Yacht Or Nyacht #')
-    elsif object.number.match('BRC')
-      object.number.gsub('BRC', 'Beyond Yacht Rock Record Club #')
-    else
-      object.number.gsub('BYR', 'Beyond Yacht Rock #')
-    end
+  def number
+    "#{object.show.abbreviation}#{object.episode_no}"
+  end
+
+  def show_title
+    "#{object.show.title} ##{object.episode_no}"
   end
 end
