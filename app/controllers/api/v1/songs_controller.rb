@@ -14,7 +14,7 @@ class Api::V1::SongsController < Api::V1::ApiController
 
   def create
     @song = Song.new(song_params)
-    @song.episode = @episode
+    @song.episodes << @episode
     if @song.save
       render json: @song, status: :created
     else

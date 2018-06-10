@@ -8,6 +8,8 @@ class Api::V1::EpisodesController < Api::V1::ApiController
 
   def create
     @episode = Episode.new(episode_params)
+    @show = Show.find_by(abbreviation: episode_params[:number].gsub(/\d+/, ''))
+    @episode.show = @show
     if @episode.save
       render json: @episode, serializer: ExtendedEpisodeSerializer, status: :created
     else
