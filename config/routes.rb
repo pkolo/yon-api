@@ -14,6 +14,8 @@ Rails.application.routes.draw do
         resources :songs, only: [:create]
       end
 
+      resources :shows, only: [:index]
+
       resources :stats, only: [:show]
 
       post   "/login"       => "sessions#create"

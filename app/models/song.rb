@@ -3,6 +3,7 @@ class Song < ActiveRecord::Base
   scope :essential, -> { where('yachtski >= 90') }
   scope :not_essential, -> { where('yachtski < 90') }
   scope :nyacht_rock, -> { where('yachtski < 50') }
+  scope :published, -> { joins(:episodes).where('episodes.published = true') }
 
   before_save :update_yachtski
   after_save :destroy_temp_credits
