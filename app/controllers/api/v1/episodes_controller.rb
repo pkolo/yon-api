@@ -1,5 +1,5 @@
 class Api::V1::EpisodesController < Api::V1::ApiController
-  before_action :require_login, only: [:create]
+  before_action :require_login, only: [:create, :update]
 
   def show
     @episode = Episode.find(params[:id])
@@ -18,8 +18,19 @@ class Api::V1::EpisodesController < Api::V1::ApiController
     end
   end
 
+  def update
+    @episode = Episode.find(params[:id])
+
+    if @episode.update_attributes(episode_params)
+      render json: @episode, serializer: ExtendedEpisodeSerializer
+    else
+      errors = @episode.errors.full_messages
+      render json: {errors: errors}, status: :unprocessable_entity
+    end
+  end
+
   private
     def episode_params
-      params.require(:episode).permit(:number, :notes, :link)
+      params.require(:episode).permit(:number, :title, :notes, :link, :published)
     end
 end

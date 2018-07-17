@@ -1,5 +1,5 @@
 class EpisodeSerializer < ActiveModel::Serializer
-  attributes :id, :number, :show_title, :resource_url, :air_date, :data_id
+  attributes :id, :number, :show_title, :resource_url, :air_date, :data_id, :published
 
   def resource_url
     "/episodes/#{object.id}"
