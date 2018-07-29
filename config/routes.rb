@@ -10,7 +10,7 @@ Rails.application.routes.draw do
         post '/albums/search' => 'albums#search'
       end
 
-      resources :episodes, only: [:show, :create, :update] do
+      resources :episodes, only: [:index, :show, :create, :update] do
         resources :songs, only: [:create]
       end
 
