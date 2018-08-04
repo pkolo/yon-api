@@ -13,10 +13,9 @@ class Api::V1::EpisodesController < Api::V1::ApiController
 
   def create
     @episode = Episode.new(episode_params)
-    @show = Show.find_by(abbreviation: episode_params[:number].gsub(/\d+/, ''))
-    @episode.show = @show
+
     if @episode.save
-      render json: @episode, serializer: ExtendedEpisodeSerializer, status: :created
+      render json: @episode, status: :created
     else
       errors = @episode.errors.full_messages
       render json: {errors: errors}, status: :unprocessable_entity
@@ -36,6 +35,6 @@ class Api::V1::EpisodesController < Api::V1::ApiController
 
   private
     def episode_params
-      params.require(:episode).permit(:number, :title, :notes, :link, :published)
+      params.require(:episode).permit(:episode_no, :title, :notes, :link, :published, :show_id)
     end
 end
