@@ -24,8 +24,12 @@ class Api::V1::SongsController < Api::V1::ApiController
 
   private
     def song_params
-      params.require(:song)
-            .permit(:title, :year, :jd_score, :dave_score, :hunter_score, :steve_score, :credits_attributes => [:role, :personnel_attributes => [:id, :name]])
+      params.require(:song).permit(:title, :year, :jd_score,
+        :dave_score, :hunter_score, :steve_score,
+        credits_attributes: [:role,
+          personnel_attributes: [:discog_id, :name]
+        ]
+      )
     end
 
     def episode_id_params
