@@ -7,8 +7,9 @@ Rails.application.routes.draw do
       resources :albums, only: [:show]
       resources :personnel, only: [:show]
 
-      resources :songs, only: [:index, :show] do
+      resources :songs, only: [:index, :show, :update] do
         resources :albums, only: [:create]
+        resources :credits, only: [:index]
         post '/albums/search' => 'albums#search'
       end
 

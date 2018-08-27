@@ -5,7 +5,7 @@ class Api::V1::PersonnelController < ApplicationController
   end
 
   def search
-    @personnel = Personnel.name_search(params[:q]).where.not(discog_id: nil)
+    @personnel = Personnel.name_search(params[:q])
     render json: @personnel
   end
 end

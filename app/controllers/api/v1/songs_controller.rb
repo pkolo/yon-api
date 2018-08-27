@@ -4,19 +4,32 @@ class Api::V1::SongsController < Api::V1::ApiController
 
   def index
     @songs = Song.published.pluck(:data)
+
     render json: @songs, adapter: false
   end
 
   def show
     @song = Song.find(params[:id])
+
     render json: @song, serializer: ExtendedSongSerializer
   end
 
   def create
     @song = Song.new(song_params)
     @song.episodes << @episode
+
     if @song.save
       render json: @song, status: :created
+    else
+      render json: {errors: @song.errors.full_messages}, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    @song = Song.find(params[:id])
+
+    if @song.update(song_params)
+      render json: @song, serializer: ExtendedSongSerializer
     else
       render json: {errors: @song.errors.full_messages}, status: :unprocessable_entity
     end
