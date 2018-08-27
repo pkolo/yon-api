@@ -21,7 +21,15 @@ class Api::DiscogsApi < Api::ApiBase
     artist = sanitize_string_for_search(@options[:artist])
     title = sanitize_string_for_search(@options[:title])
     q = "type=release&artist=#{artist}&track=#{title}&token=#{ENV.fetch("DISCOG_TOKEN")}"
+
     response = get "https://api.discogs.com/database/search?#{q}"
+
+    if response["results"].empty?
+      q = "type=release&credit=#{artist}&track=#{title}&token=#{ENV.fetch("DISCOG_TOKEN")}"
+
+      response = get "https://api.discogs.com/database/search?#{q}"
+    end
+
     response["results"].sort_by {|r| r["community"]["have"]}.reverse
   end
 end
