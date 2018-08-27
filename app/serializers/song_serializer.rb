@@ -9,6 +9,10 @@ class SongSerializer < ActiveModel::Serializer
     "/songs/#{object.id}"
   end
 
+  def discog_id
+    object.album ? object.album.discog_id : null
+  end
+
   def scores
     {
       jd: object.jd_score,
