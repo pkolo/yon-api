@@ -18,12 +18,12 @@ module TrackMatchUtilities
         range = track.split(" to ")
         start = all_tracks.index(range[0])
         fin = all_tracks.index(range[1])
-        all_tracks[start..fin]
+        (start && fin) ? all_tracks[start..fin] : []
       elsif track.include?("-")
         range = track.split("-")
         start = all_tracks.index(range[0])
         fin = all_tracks.index(range[1])
-        all_tracks[start..fin]
+        (start && fin) ? all_tracks[start..fin] : []
       else
         track
       end

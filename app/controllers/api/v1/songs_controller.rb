@@ -3,18 +3,21 @@ class Api::V1::SongsController < Api::V1::ApiController
   before_action :find_episode, only: [:create]
 
   def index
-    @songs = Song.pluck(:data)
+    @songs = Song.published.pluck(:data)
+
     render json: @songs, adapter: false
   end
 
   def show
     @song = Song.find(params[:id])
+
     render json: @song, serializer: ExtendedSongSerializer
   end
 
   def create
     @song = Song.new(song_params)
-    @song.episode = @episode
+    @song.episodes << @episode
+
     if @song.save
       render json: @song, status: :created
     else
@@ -22,10 +25,24 @@ class Api::V1::SongsController < Api::V1::ApiController
     end
   end
 
+  def update
+    @song = Song.find(params[:id])
+
+    if @song.update(song_params)
+      render json: @song, serializer: ExtendedSongSerializer
+    else
+      render json: {errors: @song.errors.full_messages}, status: :unprocessable_entity
+    end
+  end
+
   private
     def song_params
-      params.require(:song)
-            .permit(:title, :year, :jd_score, :dave_score, :hunter_score, :steve_score, :credits_attributes => [:role, :personnel_attributes => [:id, :name]])
+      params.require(:song).permit(:title, :year, :jd_score,
+        :dave_score, :hunter_score, :steve_score,
+        credits_attributes: [:role,
+          personnel_attributes: [:discog_id, :name]
+        ]
+      )
     end
 
     def episode_id_params

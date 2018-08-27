@@ -14,7 +14,7 @@ class Api::YoutubeApi < Api::ApiBase
                      key: ENV['YT_KEY']}
     data = get(@root + parameterize(search_params))
     vid_data = data["items"].first
-    vid_data["id"]["videoId"]
+    vid_data ? vid_data["id"]["videoId"] : ""
   end
 
   private

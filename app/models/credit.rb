@@ -47,7 +47,7 @@ class Credit < ActiveRecord::Base
 
     def find_or_initialize_personnel
       # Find or initialize the personnel by name
-      existing_personnel = Personnel.find_by(name: self.personnel.name)
+      existing_personnel = Personnel.find_by(discog_id: self.personnel.discog_id, name: self.personnel.name)
       if existing_personnel && existing_personnel.has_discog?
         self.personnel = existing_personnel
       elsif existing_personnel

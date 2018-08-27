@@ -3,11 +3,13 @@ class Song < ActiveRecord::Base
   scope :essential, -> { where('yachtski >= 90') }
   scope :not_essential, -> { where('yachtski < 90') }
   scope :nyacht_rock, -> { where('yachtski < 50') }
+  scope :published, -> { joins(:episodes).where('episodes.published = true') }
 
   before_save :update_yachtski
   after_save :destroy_temp_credits
   after_save :update_data
-  after_create_commit :update_yt_id
+  after_update :update_personnel_yachtski
+  after_update :update_yt_id
   after_destroy :destroy_album, if: :album_is_orphan?
 
   belongs_to :album, optional: true, touch: true
@@ -53,6 +55,10 @@ class Song < ActiveRecord::Base
   def update_data
     song_data = ActiveModelSerializers::SerializableResource.new(self, serializer: SongSerializer)
     self.update_columns data: song_data.as_json
+  end
+
+  def update_personnel_yachtski
+    self.personnel.each { |person| person.update_yachtski }
   end
 
   def destroy_temp_credits
