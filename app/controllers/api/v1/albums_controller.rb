@@ -13,6 +13,8 @@ class Api::V1::AlbumsController < Api::V1::ApiController
     @album = Album.find_or_initialize_by(album_params)
     params = get_album_data
 
+    @song.player_credits.destroy_all if @song.player_credits.any?
+
     if @album.update(params)
       render json: @song, serializer: ExtendedSongSerializer, status: :created
     else
@@ -26,10 +28,15 @@ class Api::V1::AlbumsController < Api::V1::ApiController
     discogs = Api::DiscogsApi.new(options)
     search_data = discogs.search
     album_ids = search_data.map {|r| r["id"].to_s}
-    match = album_ids & Album.pluck(:discog_id)
+    matches = Album.where(discog_id: album_ids)
 
-    if match.any?
-      @album = Album.find_or_initialize_by(discog_id: match)
+    if matches.length > 1
+      existing = []
+      matches.each { |album| existing << {title: "#{album.title}", year: album.year, id: album.discog_id, url: "http://discogs.com/release/#{album.discog_id}"} }
+
+      render json: { errors: ["Multiple matching albums."], existing: existing }, status: :unprocessable_entity
+    elsif matches.any?
+      @album = Album.find_or_initialize_by(discog_id: matches.first.discog_id)
       params = get_album_data
 
       if @album.update(params)
@@ -40,8 +47,13 @@ class Api::V1::AlbumsController < Api::V1::ApiController
         render json: {errors: errors}, status: :unprocessable_entity
       end
     else
+      existing = []
+      @song.artists.each do |artist|
+        artist.albums.each { |album| existing << {title: "#{artist.name} - #{album.title}", year: album.year, id: album.discog_id, url: "http://discogs.com/release/#{album.discog_id}"} }
+      end
+
       suggestions = search_data.map {|r| {title: r["title"], year: r["year"], id: r["id"], url: "http://discogs.com/#{r["uri"]}"}}
-      render json: {errors: ["No matching albums."], suggestions: suggestions}, status: :unprocessable_entity
+      render json: {errors: ["No matching albums."], existing: existing, suggestions: suggestions}, status: :unprocessable_entity
     end
   end
 

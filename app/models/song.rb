@@ -16,6 +16,7 @@ class Song < ActiveRecord::Base
   has_and_belongs_to_many :episodes
   has_many :credits, as: :creditable
   has_many :artist_credits, ->(credit) { where 'credits.role IN (?)', ["Artist", "Temp Artist"] }, class_name: 'Credit', as: :creditable
+  has_many :player_credits, ->(credit) { where 'credits.role NOT IN (?)', ["Artist", "Temp Artist"] }, class_name: 'Credit', as: :creditable
   has_many :personnel, through: :credits, dependent: :destroy
   has_many :artists, ->(credit) { where 'credits.role IN (?)', ["Artist", "Temp Artist"] }, through: :credits, source: :personnel
   has_many :featured_artists, ->(credit) { where 'credits.role IN (?)', ["Featuring", "Duet"] }, through: :credits, source: :personnel
