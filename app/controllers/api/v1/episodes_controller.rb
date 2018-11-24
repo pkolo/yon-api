@@ -25,7 +25,7 @@ class Api::V1::EpisodesController < Api::V1::ApiController
   def update
     @episode = Episode.find(params[:id])
 
-    if @episode.update_attributes(episode_params)
+    if @episode.update(episode_params)
       render json: @episode, serializer: ExtendedEpisodeSerializer
     else
       errors = @episode.errors.full_messages
@@ -35,6 +35,7 @@ class Api::V1::EpisodesController < Api::V1::ApiController
 
   private
     def episode_params
-      params.require(:episode).permit(:episode_no, :title, :notes, :link, :published, :show_id)
+      params.require(:episode).permit(:episode_no, :title, :notes,
+        :link, :published, :description, :show_id)
     end
 end

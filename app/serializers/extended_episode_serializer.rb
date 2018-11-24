@@ -1,5 +1,6 @@
 class ExtendedEpisodeSerializer < EpisodeSerializer
-  attributes :id, :number, :show_title, :resource_url, :data_id, :published, :air_date
+  attributes :id, :number, :show_title, :resource_url, :data_id, :published, :air_date,
+    :title, :description
 
   has_many :songs, serializer: SongSerializer
 
