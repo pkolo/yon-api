@@ -3,16 +3,30 @@
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
-  <body>
-      <h1>Yacht Or Nyacht Song Requests</h1>
+  <body style="font-family: sans-serif; width: 600px;">
+    <h3>Yacht Or Nyacht Requests Digest (<%= Time.current.strftime('%m/%d/%Y') %>)</h3>
 
+    <hr>
+
+    <div style="margin-bottom: 20px; font-size: 13px;">
       <% @requests.each do |request| %>
         <p>
-          <b>From:</b> <%= request.name %><br>
-          <b>Song:</b> <%= request.artist %> - <%= request.title %><br>
-          <b>Message:</b> <%= request.message %><br>
-          <b>Link:</b> <a href="<%= request.link %>"><%= request.link %></a>
+          <b>From:</b> <%= request["name"] %><br>
+          <b>Song:</b> <%= request["artist"] %> - <%= request["title"] %><br>
+          <b>Link:</b> <a href="<%= request["link"] %>"><%= request["link"] %></a><br>
+          <b>Message:</b> <%= request["message"] %>
         </p>
+
+        <hr>
       <% end %>
+    </div>
+
+    <div>
+      Have a great day!
+      <br>
+      <br>
+      Love,<br>
+      Yacht Or Bot
+    </div>
   </body>
 </html>
