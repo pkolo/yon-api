@@ -34,6 +34,9 @@ module YonApi
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    # Sidekiq
+    config.active_job.queue_adapter = :sidekiq
+
     # Middleware
     config.middleware.use Rack::Attack
   end
