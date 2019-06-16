@@ -6,6 +6,7 @@ class Api::V1::SongRequestsController < Api::V1::ApiController
       render json: song_request
     else
       render json: { errors: song_request.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   private
