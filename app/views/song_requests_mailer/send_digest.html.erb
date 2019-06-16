@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+      <h1>Yacht Or Nyacht Song Requests</h1>
+
+      <% @requests.each do |request| %>
+        <p>
+          <b>From:</b> <%= request.name %><br>
+          <b>Song:</b> <%= request.artist %> - <%= request.title %><br>
+          <b>Message:</b> <%= request.message %><br>
+          <b>Link:</b> <a href="<%= request.link %>"><%= request.link %></a>
+        </p>
+      <% end %>
+  </body>
+</html>
