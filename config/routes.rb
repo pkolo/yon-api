@@ -3,9 +3,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get '/personnel/search' => 'personnel#search'
-      
+
       resources :albums, only: [:show]
       resources :personnel, only: [:show]
+      resources :song_requests, only: [:create]
 
       resources :songs, only: [:index, :show, :update] do
         resources :albums, only: [:create]
