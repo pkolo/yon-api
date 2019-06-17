@@ -4,7 +4,7 @@ task :send_digest => :environment do
   requests = SongRequest.undigested
 
   if requests.any?
-    SongRequestsMailer.send_digest(requests.to_json).deliver_later
+    SongRequestsMailer.send_digest(requests.to_json).deliver_now
 
     requests.each { |request| request.update(digested: true) }
     puts "sent."
