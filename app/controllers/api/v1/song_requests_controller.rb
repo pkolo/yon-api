@@ -1,4 +1,12 @@
 class Api::V1::SongRequestsController < Api::V1::ApiController
+  before_action :require_login, only: [:index]
+
+  def index
+    song_requests = SongRequest.where(digested: false)
+
+    render json: song_requests
+  end
+
   def create
     song_request = SongRequest.new(song_request_params)
 
