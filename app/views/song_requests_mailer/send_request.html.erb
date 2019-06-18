@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body style="font-family: sans-serif; background: #eeeeee;">
+    <div style="width: 500px;">
+      <div style="margin-bottom: 20px; font-size: 20px;">
+        <h3>Yacht Or Nyacht Request</h3>
+      </div>
+
+      <div style="padding: 30px; border-radius: 5px; text-align: left; background: #ffffff; font-size: 16px;">
+        <div>
+          <b>From:</b> <%= @request.name %>
+        </div>
+
+        <div>
+          <b>Artist:</b> <%= @request.artist %><br>
+        </div>
+
+        <div>
+          <b>Title:</b> <%= @request.title %><br>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+          <b>Link:</b> <a href="<%= @request.link %>"><%= @request.link %></a><br>
+        </div>
+
+        <div>
+          <hr>
+          <span style="white-space: pre-wrap;"><i><%= @request.message %></i></span>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
