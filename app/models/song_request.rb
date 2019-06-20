@@ -6,6 +6,6 @@ class SongRequest < ActiveRecord::Base
   private
 
   def send_mailer
-    SongRequestsMailer.send_request(self).deliver_later
+    SongRequestsMailer.send_request(self).deliver_now
   end
 end
