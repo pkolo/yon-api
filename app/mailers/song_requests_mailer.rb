@@ -14,6 +14,6 @@ class SongRequestsMailer < ApplicationMailer
     mail(
       from: ENV["MAILER_FROM"],
       to: ENV["MAILER_TO"],
-      subject: "Yacht Or Nyacht Request /  '#{@request.title}' by #{@request.artist}" )
+      subject: "'#{@request.title}' by #{@request.artist}" )
   end
 end
