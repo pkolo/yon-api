@@ -11,7 +11,7 @@ class Api::V1::SongsController < Api::V1::ApiController
   def show
     @song = Song.find(params[:id])
 
-    render json: @song, serializer: ExtendedSongSerializer
+    render json: SongSerializer.render(@song, view: :extended)
   end
 
   def create

@@ -1,15 +1,27 @@
-class EpisodeSerializer < ActiveModel::Serializer
-  attributes :id, :number, :show_title, :resource_url, :data_id, :published, :air_date
+class EpisodeSerializer < Blueprinter::Base
+  identifier :id
 
-  def resource_url
-    "/episodes/#{object.id}"
+  view :basic do
+    fields :id, :number, :show_title, :resource_url, :data_id, :published, :air_date
+
+    field :resource_url do |object|
+      "/episodes/#{object.id}"
+    end
+
+    field :number do |object|
+      "#{object.show.abbreviation}#{object.episode_no}"
+    end
+
+    field :show_title do |object|
+      "#{object.show.title} ##{object.episode_no}"
+    end
   end
 
-  def number
-    "#{object.show.abbreviation}#{object.episode_no}"
-  end
+  view :extended do
+    include_view :basic
 
-  def show_title
-    "#{object.show.title} ##{object.episode_no}"
+    association :songs, blueprint: SongSerializer, view: :basic
+
+    fields :title, :description
   end
 end

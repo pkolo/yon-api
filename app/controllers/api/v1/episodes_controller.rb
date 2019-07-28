@@ -8,7 +8,7 @@ class Api::V1::EpisodesController < Api::V1::ApiController
 
   def show
     @episode = Episode.find(params[:id])
-    render json: @episode, serializer: ExtendedEpisodeSerializer
+    render json: EpisodeSerializer.render(@episode, view: :extended)
   end
 
   def create
@@ -26,7 +26,7 @@ class Api::V1::EpisodesController < Api::V1::ApiController
     @episode = Episode.find(params[:id])
 
     if @episode.update(episode_params)
-      render json: @episode, serializer: ExtendedEpisodeSerializer
+      render json: EpisodeSerializer.render(@episode, view: :extended)
     else
       errors = @episode.errors.full_messages
       render json: {errors: errors}, status: :unprocessable_entity

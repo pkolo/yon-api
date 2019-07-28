@@ -1,24 +1,41 @@
-class SongSerializer < ActiveModel::Serializer
-  attributes :id, :resource_url, :title, :track_no, :yt_id, :year, :yachtski, :scores
+class SongSerializer < Blueprinter::Base
+  identifier :id
 
-  has_many :artists
-  has_many :featured_artists
-  has_many :episodes
+  fields :id, :title, :yachtski
 
-  def resource_url
+  association :artists, blueprint: PersonnelSerializer, view: :basic
+  association :featured_artists, blueprint: PersonnelSerializer, view: :basic
+
+  field :resource_url do |object|
     "/songs/#{object.id}"
   end
 
-  def discog_id
-    object.album ? object.album.discog_id : null
+  view :basic do
+    fields :track_no, :yt_id, :year
+
+    association :episodes, blueprint: EpisodeSerializer, view: :basic
+
+    field :discog_id do |object|
+      object.album ? object.album.discog_id : null
+    end
+
+    field :scores do |object|
+      {
+        jd: object.jd_score,
+        hunter: object.hunter_score,
+        steve: object.steve_score,
+        dave: object.dave_score
+      }
+    end
   end
 
-  def scores
-    {
-      jd: object.jd_score,
-      hunter: object.hunter_score,
-      steve: object.steve_score,
-      dave: object.dave_score
-    }
+  view :extended do |object|
+    include_view :basic
+
+    association :album, blueprint: AlbumSerializer, view: :basic
+
+    field :players do |object|
+      object.players.as_json
+    end
   end
 end

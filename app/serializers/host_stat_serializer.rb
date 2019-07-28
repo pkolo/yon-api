@@ -1,31 +1,29 @@
-class HostStatSerializer < ActiveModel::Serializer
-  attributes :host, :all_hosts, :weird_essentials, :essential, :yacht_rock, :nyacht_rock, :deviation_from_mean, :dissents, :disagreements
-
-  def host
+class HostStatSerializer < Blueprinter::Base
+  field :host do |object|
     object.host
   end
 
-  def all_hosts
-    Host.all
+  field :all_hosts do |object|
+    Host.all.as_json
   end
 
-  def essential
+  field :essential do |object|
     object.essential
   end
 
-  def yacht_rock
+  field :yacht_rock do |object|
     object.yacht_rock
   end
 
-  def nyacht_rock
+  field :nyacht_rock do |object|
     object.nyacht_rock
   end
 
-  def deviation_from_mean
+  field :deviation_from_mean do |object|
     object.deviation_from_mean
   end
 
-  def dissents
+  field :dissents do |object|
     all_dissents = object.dissents
     yacht_dissents = all_dissents.first(3).map do |result|
       song = Song.find(result["id"])
@@ -42,11 +40,11 @@ class HostStatSerializer < ActiveModel::Serializer
     { yacht: yacht_dissents, nyacht: nyacht_dissents }
   end
 
-  def disagreements
+  field :disagreements do |object|
     object.disagreements
   end
 
-  def weird_essentials
+  field :weird_essentials do |object|
     object.weird_essentials.pluck(:data)
   end
 end

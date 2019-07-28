@@ -1,3 +1,5 @@
 class ExtendedAlbumSerializer < AlbumSerializer
-  has_many :songs
+  field :songs do |object|
+    object.songs
+  end
 end
