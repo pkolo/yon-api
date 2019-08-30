@@ -3,7 +3,7 @@ class Api::V1::EpisodesController < Api::V1::ApiController
 
   def index
     @episodes = Episode.all.order('id DESC')
-    render json: @episodes
+    render json: EpisodeSerializer.render(@episodes, view: :basic)
   end
 
   def show
@@ -15,7 +15,7 @@ class Api::V1::EpisodesController < Api::V1::ApiController
     @episode = Episode.new(episode_params)
 
     if @episode.save
-      render json: @episode, status: :created
+      render json: EpisodeSerializer.render(@episode, view: :basic)
     else
       errors = @episode.errors.full_messages
       render json: {errors: errors}, status: :unprocessable_entity

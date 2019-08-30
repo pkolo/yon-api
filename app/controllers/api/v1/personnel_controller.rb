@@ -6,6 +6,6 @@ class Api::V1::PersonnelController < ApplicationController
 
   def search
     @personnel = Personnel.name_search(params[:q])
-    render json: @personnel
+    render json: PersonnelSerializer.render(@personnel, view: :extended)
   end
 end

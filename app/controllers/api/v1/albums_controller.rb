@@ -41,7 +41,7 @@ class Api::V1::AlbumsController < Api::V1::ApiController
 
       if @album.update(params)
         @song.update_data
-        render json: SongSerializer.render(@songs, view: :extended), status: :created
+        render json: SongSerializer.render(@song, view: :extended), status: :created
       else
         errors = @album.errors.full_messages
         render json: {errors: errors}, status: :unprocessable_entity

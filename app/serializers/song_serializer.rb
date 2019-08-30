@@ -1,7 +1,7 @@
 class SongSerializer < Blueprinter::Base
   identifier :id
 
-  fields :id, :title, :yachtski
+  fields :title, :yachtski
 
   association :artists, blueprint: PersonnelSerializer, view: :basic
   association :featured_artists, blueprint: PersonnelSerializer, view: :basic
@@ -16,7 +16,7 @@ class SongSerializer < Blueprinter::Base
     association :episodes, blueprint: EpisodeSerializer, view: :basic
 
     field :discog_id do |object|
-      object.album ? object.album.discog_id : null
+      object.album&.discog_id
     end
 
     field :scores do |object|

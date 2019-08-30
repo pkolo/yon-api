@@ -1,7 +1,7 @@
 class AlbumSerializer < Blueprinter::Base
   identifier :id
 
-  fields :id, :resource_url, :title, :yachtski
+  fields :resource_url, :title, :yachtski
 
   association :artists, blueprint: PersonnelSerializer, view: :basic
   association :featured_artists, blueprint: PersonnelSerializer, view: :basic
