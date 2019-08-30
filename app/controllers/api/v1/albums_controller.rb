@@ -5,7 +5,7 @@ class Api::V1::AlbumsController < Api::V1::ApiController
 
   def show
     @album = Album.find(params[:id])
-    render json: @album, serializer: ExtendedAlbumSerializer
+    render json: AlbumSerializer.render(@album, view: :extended)
   end
 
   # Nested through song
@@ -16,7 +16,7 @@ class Api::V1::AlbumsController < Api::V1::ApiController
     @song.player_credits.destroy_all if @song.player_credits.any?
 
     if @album.update(params)
-      render json: @song, serializer: ExtendedSongSerializer, status: :created
+      render json: SongSerializer.render(@song, view: :extended), status: :created
     else
       errors = @album.errors.full_messages
       render json: {errors: errors}, status: :unprocessable_entity
@@ -41,7 +41,7 @@ class Api::V1::AlbumsController < Api::V1::ApiController
 
       if @album.update(params)
         @song.update_data
-        render json: @song, serializer: ExtendedSongSerializer, status: :created
+        render json: SongSerializer.render(@song, view: :extended), status: :created
       else
         errors = @album.errors.full_messages
         render json: {errors: errors}, status: :unprocessable_entity
